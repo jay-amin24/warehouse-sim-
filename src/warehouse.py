@@ -85,7 +85,7 @@ if __name__ == "__main__":
     wh = Warehouse()
 
     for i in range(1, 6):  # 5 pallets demo
-        weight = random.randint(380, 420)
+        weight = random.randint(375, 425)
         pallet = Pallet(f"P{i:03}", weight)
         wh.process_pallet(pallet)
         print("-"*60)
