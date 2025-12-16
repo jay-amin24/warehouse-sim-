@@ -7,7 +7,7 @@ import sqlite3
 from datetime import datetime
 from warehouse import Warehouse, Pallet
 
-# ------------------- Database Setup -------------------
+#  Database Setup 
 conn = sqlite3.connect("warehouse.db", check_same_thread=False)
 c = conn.cursor()
 c.execute('''
@@ -35,7 +35,7 @@ def query_rfid(rfid):
     df = pd.read_sql_query(f"SELECT * FROM pallet_movements WHERE rfid='{rfid}'", conn)
     return df
 
-# ------------------- Warehouse Setup -------------------
+#  Warehouse Setup 
 ROWS, COLS, LAYERS = 3, 3, 2
 TOLERANCE = 25
 
@@ -49,7 +49,7 @@ st.markdown(
     "Concurrent multi-pallet animation with ASRS stacking, RFID, weight validation, KPI, and SQLite logging"
 )
 
-# ------------------- Pallet Generation -------------------
+#  Pallet Generation 
 num_pallets = st.number_input("Number of inbound pallets", min_value=1, max_value=10, value=3)
 if st.button("Generate Pallets"):
     st.session_state.pallets = []
@@ -62,10 +62,10 @@ if st.button("Generate Pallets"):
         st.session_state.pallets.append(pallet)
     st.success(f"Generated {num_pallets} inbound pallets with RFID codes.")
 
-# ------------------- Layer Selector -------------------
+#  Layer Selector 
 layer_selected = st.selectbox("Select ASRS Layer to View", options=list(range(1, warehouse.capacity['layers']+1)), index=0)
 
-# ------------------- Grid Drawing with Animation -------------------
+#  Grid Drawing with Animation 
 def draw_grid(pallet_positions, show_layer=1, highlight=None):
     inbound_list = []
     conveyor = ["⬜"] * 3
@@ -108,7 +108,7 @@ def draw_grid(pallet_positions, show_layer=1, highlight=None):
     for row in asrs:
         st.text(" ".join(row))
 
-# ------------------- KPI Dashboard -------------------
+#  KPI Dashboard 
 def update_kpi():
     df = pd.read_sql_query("SELECT * FROM pallet_movements", conn)
     total = len(df)
@@ -121,7 +121,7 @@ def update_kpi():
     if total > 0:
         st.bar_chart(pd.DataFrame({"Stored": [stored], "Manual": [manual]}))
 
-# ------------------- Animated Simulation -------------------
+#  Animated Simulation 
 if st.button("Run Simulation"):
     if not hasattr(st.session_state, "pallets") or not st.session_state.pallets:
         st.warning("Generate pallets first!")
@@ -204,7 +204,7 @@ if st.button("Run Simulation"):
 
         st.success("✅ Simulation Complete!")
 
-# ------------------- RFID Search -------------------
+#  RFID Search 
 st.subheader("🔍 Search Pallet by RFID")
 rfid_input = st.text_input("Enter RFID (e.g., RFID-12345)")
 if st.button("Search RFID"):
@@ -217,7 +217,7 @@ if st.button("Search RFID"):
     else:
         st.warning("Enter a valid RFID.")
 
-# ------------------- Export DB Log -------------------
+# Export DB Log 
 st.subheader("⬇️ Download Movement Log from DB")
 df_log = pd.read_sql_query("SELECT * FROM pallet_movements", conn)
 st.download_button(
