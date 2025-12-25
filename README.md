@@ -1,7 +1,7 @@
 # warehouse-sim
 
-required:
+required:/
 !pip install streamlit pandas openpyxl
 
-For running on browser with for example colab :
+For running on browser with for example colab :/
 !streamlit run app.py & npx localtunnel --port 8501
